@@ -21,26 +21,25 @@ amplitudeShift = 0;
 duration = 5; 
 samplingRate = 20;
 numSamples = round(duration * samplingRate);
-topToTarget = [100; -50; 30]; 
 
 % sineData = generateSineData(amplitude, frequency, timeShift, ...
 %     amplitudeShift, duration, samplingRate);
-% t = [sineData, zeros(numSamples, 1) , zeros(numSamples, 1)];  % numSample * 3
+t = [sineData, zeros(numSamples, 1) , zeros(numSamples, 1)];  % numSample * 3
 % t = [zeros(numSamples, 1) + 20, sineData, zeros(numSamples, 1)];  % numSample * 3
 % t = [zeros(numSamples, 1), zeros(numSamples, 1), 0.1 * sineData];  % numSample * 3
 
-t = [zeros(numSamples, 1), zeros(numSamples, 1), zeros(numSamples, 1)];  % numSample * 3
+% t = [zeros(numSamples, 1), zeros(numSamples, 1), zeros(numSamples, 1)];  % numSample * 3
 
 
 % rotations = [0.01 * sineData, zeros(numSamples, 1), ...
 %     zeros(numSamples, 1)];
-% rotations = [zeros(numSamples, 1), 0.005 * sineData, ...
+% rotations = [zeros(numSamples, 1), 0.01 * sineData, ...
 %     zeros(numSamples, 1)];
-rotations = [zeros(numSamples, 1), zeros(numSamples, 1), ...
-   0.01 * sineData];
-
 % rotations = [zeros(numSamples, 1), zeros(numSamples, 1), ...
-%      zeros(numSamples, 1)];  % numSample * 3
+%    0.01 * sineData];
+
+rotations = [zeros(numSamples, 1), zeros(numSamples, 1), ...
+     zeros(numSamples, 1)];  % numSample * 3
 
 
 % translate rotation and translation for target wrt home target coordinate,
@@ -51,13 +50,13 @@ for i = 1:size(t, 1)
     % Extract translation and rotation vectors
     ti = t(i, :)';
     rotationi = rotations(i, :)';
-    % display(ti)
-    % display(rotationi)
+    display(ti)
+    display(rotationi)
 
     % Apply targetToTopPlatform function
     [transformed_ti, transformed_rotationi] = targetToTopPlatform(ti, rotationi, topToTarget);
-    % display(transformed_ti)
-    % display(transformed_rotationi)
+    display(transformed_ti)
+    display(transformed_rotationi)
     transformed_ti(3) = transformed_ti(3) + s;
     % Store transformed vectors in matrices
     transformed_t(i, :) = transformed_ti';
@@ -92,7 +91,7 @@ end
 % Create Visualization
 for i = 1:numSamples    
     % Update plot
-    updateStewartPlatformPlot(transformed_t(i, :)', reshape(pArrayAllTime(i, :, :), 3, 6), bArray, ...
+    updateStewartPlatformPlot(transformed_t(i, :), reshape(pArrayAllTime(i, :, :), 3, 6), bArray, ...
         betaArray, reshape(servoAngleAllTime(i, :, :), 1, 6), a, s, topToTarget, t(i, :)');
     
     % Set plot properties

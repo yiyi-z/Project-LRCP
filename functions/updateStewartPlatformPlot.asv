@@ -48,13 +48,11 @@ function updateStewartPlatformPlot(translated_t, pArray, bArray, betaArray, serv
            a * sin(servoAngleArray(6))] ...
            + b6;
     
-    target = [0; 0; 100] + topToTarget + t;
+    target = topToTarget + t;
+    target(3) = target(3) + s;
 
-    % display(norm(topToTarget))
-    % display(norm(target - originPlatform));
-
-
-
+    % home target coordinate
+    homeTargetOrigin = topToTarge
 
     
 

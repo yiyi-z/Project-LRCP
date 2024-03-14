@@ -24,11 +24,11 @@ function [topTranslation, topRotation] = targetToTopPlatform(translation, rotati
     closeToZero = abs(topTranslation) < threshold;
     topTranslation(closeToZero) = 0;
     
-    display(topRotation)
-    display(translation)
-    display(topToTargetHomeTargetCoordinate)
-    display(topToTarget)
-
-    display(topRotation)
-    display(topTranslation)
+    
+    % display(translation)
+    % display(topToTargetHomeTargetCoordinate)
+    % display(topToTarget)
+    % 
+    % display(topRotation)
+    % display(topTranslation)
 end
