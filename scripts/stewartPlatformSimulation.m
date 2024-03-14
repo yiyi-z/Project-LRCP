@@ -1,13 +1,10 @@
 % add functions used in the script
-addpath("../functions/computeServoAngleArray.m")
-addpath("../functions/convertToNewFrame.m")
-addpath("../functions/generateSineData.m")
-addpath("../functions/updateStewartPlatformPlot.m")
+addpath("../functions")
 
 
 % Stewart Platform configuration (of our model)
 bArray = [90.53, 49.00, -46.66, -89.04, -41.28, 42.62; ...
-         0, 74.28, 74.28, 0, -81.72, -82.72; ...
+         0, 74.28, 74.28, 0, -81.72, -81.72; ...
          0, 0, 0, 0, 0, 0]; % 3 * 6
 pArrayPlatform = 0.6 * bArray; % 3 * 6
 s = 100;
@@ -19,17 +16,17 @@ amplitude = 20;
 frequency = 1;          
 timeShift = 0;
 amplitudeShift = 0;
-duration = 10; 
-samplingRate = 20;
+duration = 1; 
+samplingRate = 2;
 numSamples = round(duration * samplingRate);
 
 sineData = generateSineData(amplitude, frequency, timeShift, ...
     amplitudeShift, duration, samplingRate);
-t = [sineData, zeros(numSamples, 1) , zeros(numSamples, 1) + 100];  % numSample * 3
+% t = [sineData, zeros(numSamples, 1) , zeros(numSamples, 1) + 100];  % numSample * 3
 % t = [zeros(numSamples, 1) + 20, sineData, zeros(numSamples, 1) + 100];  % numSample * 3
 % t = [zeros(numSamples, 1), zeros(numSamples, 1), 0.1 * sineData + 100];  % numSample * 3
 
-% t = [zeros(numSamples, 1), zeros(numSamples, 1), zeros(numSamples, 1) + 100];  % numSample * 3
+t = [zeros(numSamples, 1), zeros(numSamples, 1), zeros(numSamples, 1) + 100];  % numSample * 3
 
 
 % rotations = [0.01 * sineData, zeros(numSamples, 1), ...

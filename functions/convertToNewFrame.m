@@ -16,5 +16,7 @@ function vectorArrayNewFrame = convertToNewFrame(psi, theta, phi, t, vectorArray
                        0, cos(phi), -sin(phi); ...
                        0, sin(phi), cos(phi)];
     rotationMatrix = rotationMatrixZ * rotationMatrixY * rotationMatrixX;
+    % display(rotationMatrix)
+    % display(vectorArray)
     vectorArrayNewFrame = t + rotationMatrix * vectorArray;
 end
