@@ -1,7 +1,7 @@
 addpath("../functions")
 
-translation = transpose([0, 0, 0]);
-rotation = transpose([0.5 * pi, 0.4 * pi, 0]);
+translation = transpose([0.9, 3, 4]);
+rotation = transpose([0, 0, 0]);
 topToTarget = transpose([0, -10, 5]);
 
 [result1, result2] = targetToTopPlatform(translation, rotation, topToTarget);
@@ -14,8 +14,8 @@ newTop = result1;
 newTarget = oldTarget + translation;
 points = [oldTop, oldTarget, newTop, newTarget];
 
-display(norm(oldTarget - oldTop))
-display(norm(newTarget - newTop))
+disp(norm(oldTarget - oldTop))
+disp(norm(newTarget - newTop))
 
 x = points(1, :); % Extracts the first column (x-coordinates)
 y = points(2, :); % Extracts the second column (y-coordinates)

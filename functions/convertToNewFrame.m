@@ -4,8 +4,12 @@ function vectorArrayNewFrame = convertToNewFrame(psi, theta, phi, t, vectorArray
 %   psi: yaw, rotation around z-axis, respect to new frame.
 %   theta: pitch, rotation around y-axis, respect to new frame.
 %   phi: row, rotation around x-axis, respect to new frame.
+%   t: translation from new frame origin to old fram origin, 3 * 1.
 %   vectorArray: vectors in old frame, size 3 * n, n is the number of 
 %       vectors.
+
+% return vectorArray in new frame, size 3 * n.
+
     rotationMatrixZ = [cos(psi), -sin(psi), 0; ...
                        sin(psi), cos(psi), 0; ...
                        0, 0, 1];

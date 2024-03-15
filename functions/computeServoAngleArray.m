@@ -1,8 +1,6 @@
 function servoAngleArray = computeServoAngleArray(pArray, bArray, s, a, betaArray) 
 % inputs:
 % (all coordinate-related inputs are in base frame)
-%   t: the translation vector, i.e., the origin of the Platform frame 
-%       expressed in Base frame, size 3 * 1.
 %   pArray: p is the point of the joint between the supporting rod and the 
 %       top platform, size 3 * 6.
 %   bArray: b is the point of rotation of the servo arm for a servo motor, 
