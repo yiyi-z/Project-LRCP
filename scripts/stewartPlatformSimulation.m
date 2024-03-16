@@ -15,7 +15,9 @@ s = 100;
 a = 25;
 betaArray = deg2rad([120 + 180, 120 + 180, 240 + 180, 240 + 180, ...
     360 + 180, 360 + 180]); % 1 * 6, add 180 since motors face inwards
+baseToTop = [0; 0; 90]; % from center of base coordinate to top platform coordinate
 topToTarget = [100; -50; 30]; % 3 * 1, from centor of the top platform to center of the target in home top platform coordinate
+
 
 % Sample input values (Sine)
 amplitude = 20;
@@ -30,12 +32,11 @@ numSamples = round(duration * samplingRate);
 
 sineData = generateSineData(amplitude, frequency, timeShift, ...
     amplitudeShift, duration, samplingRate);
+
 % t = [sineData, zeros(numSamples, 1) , zeros(numSamples, 1) ];  % numSample * 3
 % t = [zeros(numSamples, 1), sineData, zeros(numSamples, 1)];  % numSample * 3
 % t = [zeros(numSamples, 1), zeros(numSamples, 1), 0.1 * sineData];  % numSample * 3
-
 t = [zeros(numSamples, 1), zeros(numSamples, 1), zeros(numSamples, 1)];  % numSample * 3
-
 
 rotations = [0.01 * sineData, zeros(numSamples, 1), ...
     zeros(numSamples, 1)];
@@ -43,7 +44,6 @@ rotations = [0.01 * sineData, zeros(numSamples, 1), ...
 %     zeros(numSamples, 1)];
 % rotations = [zeros(numSamples, 1), zeros(numSamples, 1), ...
 %    0.01 * sineData];
-
 % rotations = [zeros(numSamples, 1), zeros(numSamples, 1), ...
 %      zeros(numSamples, 1)];  % numSample * 3
 
@@ -59,24 +59,17 @@ for i = 1:size(t, 1)
     % Extract translation and rotation vectors
     ti = t(i, :)';
     rotationi = rotations(i, :)';
-    % display(ti)
-    % display(rotationi)
 
     % first translate to center of top platform in home top platform
     % coordinate
     [transformed_ti, transformed_rotationi] = targetToTopPlatform(ti, rotationi, topToTarget);
-    % display(transformed_ti)
-    % display(transformed_rotationi)
-
     % then translate to center of top platform in base coordinate
-    transformed_ti(3, :) = transformed_ti(3, :) + s;
+    transformed_ti = transformed_ti + baseToTop;
 
     % Store transformed vectors in matrices
     transformed_t(i, :) = transformed_ti';
     transformed_rotations(i, :) = transformed_rotationi';
 end
-
-% back to base coordinate
 
 
 % Compute pArray and servoAngles and save them to a matrix for later
@@ -89,14 +82,6 @@ for i=1:numSamples
     % pArray = convertToNewFrame(rotations(i, 1), rotations(i, 2), ...
     %     rotations(i, 3), t(i, :)', pArrayPlatform); % 3 * 6
     pArray(abs(pArray) < ZERO_THRESHOLD) = 0;
-
-    % disp("t: " + t(i, :)')
-    % disp("p1: " + pArray(:, 1))
-    % disp("center top: " + t(i, :)')
-    % 
-    % disp("vector: " + (pArray(:, 1) - t(i, :)'))
-    % disp("norm: " + norm(pArray(:, 1) - t(i, :)'))
-
     pArrayAllTime(i, :, :) = pArray;
 
     try
@@ -116,17 +101,11 @@ end
 
 
 
-
-
-
 % Create Visualization
 for i = 1:numSamples    
     % Update plot
     updateStewartPlatformPlot(transformed_t(i, :)', reshape(pArrayAllTime(i, :, :), 3, 6), bArray, ...
-        betaArray, reshape(servoAngleAllTime(i, :, :), 1, 6), a, s, topToTarget, t(i, :)');
-
-    % updateStewartPlatformPlot(t(i, :)', reshape(pArrayAllTime(i, :, :), 3, 6), bArray, ...
-    %     betaArray, reshape(servoAngleAllTime(i, :, :), 1, 6), a);
+        betaArray, reshape(servoAngleAllTime(i, :, :), 1, 6), a, baseToTop, topToTarget, t(i, :)');
     
     % Set plot properties
     title('Stewart Platform Animation');

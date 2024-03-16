@@ -1,4 +1,4 @@
-function updateStewartPlatformPlot(transformed_t, pArray, bArray, betaArray, servoAngleArray, a, s, topToTarget, t)
+function updateStewartPlatformPlot(transformed_t, pArray, bArray, betaArray, servoAngleArray, a, baseToTop, topToTarget, t)
     % We will plot
     % originBase: origin of Base frame, 
     % originPlatform: origin of Platform frame (translations),
@@ -7,7 +7,6 @@ function updateStewartPlatformPlot(transformed_t, pArray, bArray, betaArray, ser
     % b1, ..., b6: the center of the rotation for the motor (B_arr).
     
     originBase = [0; 0; 0];
-    % originPlatform = translated_t;
     originPlatform = transformed_t;
 
     % size 3 * 1
@@ -25,9 +24,6 @@ function updateStewartPlatformPlot(transformed_t, pArray, bArray, betaArray, ser
     b4 = bArray(:, 4);
     b5 = bArray(:, 5);
     b6 = bArray(:, 6);
-
-    % disp('b1: ');
-    % disp(b1);
 
     % size 3 * 1
     a1 = [a * cos(servoAngleArray(1)) * cos(betaArray(1)); ...
@@ -55,11 +51,9 @@ function updateStewartPlatformPlot(transformed_t, pArray, bArray, betaArray, ser
            a * sin(servoAngleArray(6))] ...
            + b6;
 
-    % disp('a1: ');
-    % disp(a1);
 
-    target = [0; 0; s] + topToTarget + t;
-    % 
+    target = baseToTop + topToTarget + t;
+   
     disp("length of from center top to target (actual): " + norm(topToTarget));
     disp("length of from center top to target (real): " + norm(target - originPlatform));
 
@@ -78,13 +72,8 @@ function updateStewartPlatformPlot(transformed_t, pArray, bArray, betaArray, ser
     disp("a1 norm: " + norm(a1 - b1));
     disp("s3 norm: " + norm(p3 - a3));
     disp("a3 norm: " + norm(a3 - b3));
-    % disp("p1: " + p1)
-
 
  
-    % 
-    % points = {originBase, originPlatform, p1, p2, p3, p4, p5, p6, ...
-    %     b1, b2, b3, b4, b5, b6, a1, a2, a3, a4, a5, a6, target};
     points = {originBase, originPlatform, p1, p2, p3, p4, p5, p6, ...
         b1, b2, b3, b4, b5, b6, a1, a2, a3, a4, a5, a6, target};
     x = zeros(1, numel(points));
@@ -145,7 +134,6 @@ function updateStewartPlatformPlot(transformed_t, pArray, bArray, betaArray, ser
 
     % label
     labels = {'O_b', 'O_p', 'P_1', 'P_2', 'P_3', 'P_4', 'P_5', 'P_6', 'B_1', 'B_2', 'B_3', 'B_4', 'B_5', 'B_6', 'A_1', 'A_2', 'A_3', 'A_4', 'A_5', 'A_6', 'target'};
-    % labels = {'O_b', 'O_p', 'P_1', 'P_2', 'P_3', 'P_4', 'P_5', 'P_6', 'B_1', 'B_2', 'B_3', 'B_4', 'B_5', 'B_6', 'A_1', 'A_2', 'A_3', 'A_4', 'A_5', 'A_6'};
 
     for i = 1:numel(x)
         text(x(i), y(i), z(i), labels{i}, 'FontSize', 8, 'FontWeight', 'bold');
