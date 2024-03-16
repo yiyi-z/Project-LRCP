@@ -15,8 +15,8 @@ s = 100;
 a = 25;
 betaArray = deg2rad([120 + 180, 120 + 180, 240 + 180, 240 + 180, ...
     360 + 180, 360 + 180]); % 1 * 6, add 180 since motors face inwards
-baseToTop = [0; 0; 90]; % from center of base coordinate to top platform coordinate
-topToTarget = [100; -50; 30]; % 3 * 1, from centor of the top platform to center of the target in home top platform coordinate
+baseToTop = [0; 0; 90]; % from center of base coordinate to top platform coordinate (at home position)
+topToTarget = [100; -50; 30]; % 3 * 1, from centor of the top platform to center of the target (at home position) in home top platform coordinate
 
 
 % Sample input values (Sine)
@@ -98,7 +98,6 @@ for i=1:numSamples
         error('Terminating the program due to an error.');
     end
 end
-
 
 
 % Create Visualization
