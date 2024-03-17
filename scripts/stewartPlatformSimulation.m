@@ -1,11 +1,8 @@
-% add functions used in the script
+%% add functions used in the script
 addpath("../functions")
 
-% we will use this threshold to filter value that's zero but not store as
-% exactly zero
-ZERO_THRESHOLD = 1e-6; 
 
-% Stewart Platform configuration (of our model)
+%% Stewart Platform configuration (of our model)
 % refer to function computeServoAngleArray for more details
 bArray = [90.53, 49.00, -46.66, -89.04, -41.28, 42.62; ...
          0, 74.28, 74.28, 0, -81.72, -81.72; ...
@@ -19,7 +16,7 @@ baseToTop = [0; 0; 90]; % from center of base coordinate to top platform coordin
 topToTarget = [100; -50; 30]; % 3 * 1, from centor of the top platform to center of the target (at home position) in home top platform coordinate
 
 
-% Sample input values (Sine)
+%% Sample input values (Sine)
 amplitude = 20;
 frequency = 1;          
 timeShift = 0;
@@ -27,6 +24,10 @@ amplitudeShift = 0;
 duration = 10; 
 samplingRate = 20;
 numSamples = round(duration * samplingRate);
+
+% we will use this threshold to filter value that's zero but not store as
+% exactly zero
+ZERO_THRESHOLD = 1e-6; 
 
 % t and rotations are based on home target coordinate
 
@@ -51,8 +52,7 @@ rotations = [0.01 * sineData, zeros(numSamples, 1), ...
 t(abs(t) < ZERO_THRESHOLD) = 0;
 rotations(abs(rotations) < ZERO_THRESHOLD) = 0;
 
-% translate rotation and translation for target wrt home target coordinate,
-% to rotation and translation for center of top platform wrt base coordinate
+%% translate rotation and translation for target wrt home target coordinate to rotation and translation for center of top platform wrt base coordinate
 transformed_t = zeros(size(t));
 transformed_rotations = zeros(size(rotations));
 for i = 1:size(t, 1)
@@ -72,15 +72,12 @@ for i = 1:size(t, 1)
 end
 
 
-% Compute pArray and servoAngles and save them to a matrix for later
-% visualiation
+%% Compute pArray and servoAngles and save them to a matrix for later visualiation
 pArrayAllTime = zeros(numSamples, 3, 6);
 servoAngleAllTime = zeros(numSamples, 1, 6);
 for i=1:numSamples
     pArray = convertToNewFrame(transformed_rotations(i, 1), transformed_rotations(i, 2), ...
         transformed_rotations(i, 3), transformed_t(i, :)', pArrayPlatform); % 3 * 6
-    % pArray = convertToNewFrame(rotations(i, 1), rotations(i, 2), ...
-    %     rotations(i, 3), t(i, :)', pArrayPlatform); % 3 * 6
     pArray(abs(pArray) < ZERO_THRESHOLD) = 0;
     pArrayAllTime(i, :, :) = pArray;
 
@@ -99,8 +96,22 @@ for i=1:numSamples
     end
 end
 
+%% Compute dosimeters locations for visualization
+housingUnitVectorsInHousingCoordinate = [1, 0, 0;
+                                         0, 1, 0;
+                                         0, 0, 1];
 
-% Create Visualization
+rotation90Z = [0, -1, 0;
+    1, 0, 0;
+    0, 0, 1];
+
+housingCoordinateYInTopPlatformCoordinate = [topToTarget(1, 1), topToTarget(2, 1), 0] / norm([topToTarget(1, 1), topToTarget(2, 1), 0]);
+housingCoordinateXInTopPlatformCoordinate = rotation90Z * housingCoordinateYInTopPlatformCoordinate;
+zRotationTargetCoordinateToHousingCoordinate = atan2(rotatedVector(2), rotatedVector(1)); 
+
+
+
+%% Create Visualization
 for i = 1:numSamples    
     % Update plot
     updateStewartPlatformPlot(transformed_t(i, :)', reshape(pArrayAllTime(i, :, :), 3, 6), bArray, ...
