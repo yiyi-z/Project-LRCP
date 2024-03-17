@@ -1,4 +1,4 @@
-function updateStewartPlatformPlot(transformed_t, pArray, bArray, betaArray, servoAngleArray, a, baseToTop, topToTarget, t)
+function updateStewartPlatformPlot(transformed_t, pArray, bArray, betaArray, servoAngleArray, a, baseToTop, topToTarget, t, housingUnitVectors)
     % We will plot
     % originBase: origin of Base frame, 
     % originPlatform: origin of Platform frame (translations),
@@ -24,6 +24,11 @@ function updateStewartPlatformPlot(transformed_t, pArray, bArray, betaArray, ser
     b4 = bArray(:, 4);
     b5 = bArray(:, 5);
     b6 = bArray(:, 6);
+
+    % size 3 * 1
+    c1 = housingUnitVectors(:, 1);
+    c2 = housingUnitVectors(:, 2);
+    c3 = housingUnitVectors(:, 3);
 
     % size 3 * 1
     a1 = [a * cos(servoAngleArray(1)) * cos(betaArray(1)); ...
@@ -54,11 +59,11 @@ function updateStewartPlatformPlot(transformed_t, pArray, bArray, betaArray, ser
 
     target = baseToTop + topToTarget + t;
    
-    disp("length of from center top to target (actual): " + norm(topToTarget));
-    disp("length of from center top to target (real): " + norm(target - originPlatform));
-
-    disp("length of from p1 to target: " + norm(target - p1));
-    disp("length of from p1 to target: " + norm(target - p6));
+    % disp("length of from center top to target (actual): " + norm(topToTarget));
+    % disp("length of from center top to target (real): " + norm(target - originPlatform));
+    % 
+    % disp("length of from p1 to target: " + norm(target - p1));
+    % disp("length of from p1 to target: " + norm(target - p6));
 
     % disp("p1: " + p1)
     % disp("center top:" + originPlatform)
@@ -68,14 +73,15 @@ function updateStewartPlatformPlot(transformed_t, pArray, bArray, betaArray, ser
     % disp("p4 norm: " + norm(originPlatform - p4));
     % disp("p5 norm: " + norm(originPlatform - p5));
     % disp("p6 norm: " + norm(originPlatform - p6));
-    disp("s1 norm: " + norm(p1 - a1));
-    disp("a1 norm: " + norm(a1 - b1));
-    disp("s3 norm: " + norm(p3 - a3));
-    disp("a3 norm: " + norm(a3 - b3));
+    % disp("s1 norm: " + norm(p1 - a1));
+    % disp("a1 norm: " + norm(a1 - b1));
+    % disp("s3 norm: " + norm(p3 - a3));
+    % disp("a3 norm: " + norm(a3 - b3));
 
  
     points = {originBase, originPlatform, p1, p2, p3, p4, p5, p6, ...
-        b1, b2, b3, b4, b5, b6, a1, a2, a3, a4, a5, a6, target};
+        b1, b2, b3, b4, b5, b6, a1, a2, a3, a4, a5, a6, target, c1, c2, c3};
+
     x = zeros(1, numel(points));
     y = zeros(1, numel(points));
     z = zeros(1, numel(points));
@@ -128,18 +134,24 @@ function updateStewartPlatformPlot(transformed_t, pArray, bArray, betaArray, ser
 
     line([x(2), x(21)], [y(2), y(21)], [z(2), z(21)], 'Color', 'b', 'LineStyle', '-'); 
 
-    line([x(3), x(21)], [y(3), y(21)], [z(3), z(21)], 'Color', 'b', 'LineStyle', '-'); 
+    % line([x(3), x(21)], [y(3), y(21)], [z(3), z(21)], 'Color', 'b', 'LineStyle', '-'); 
+    % 
+    % line([x(8), x(21)], [y(8), y(21)], [z(8), z(21)], 'Color', 'b', 'LineStyle', '-'); 
 
-    line([x(8), x(21)], [y(8), y(21)], [z(8), z(21)], 'Color', 'b', 'LineStyle', '-'); 
+
+    line([x(21), x(22)], [y(21), y(22)], [z(21), z(22)], 'Color', 'b', 'LineStyle', '-'); 
+    line([x(21), x(23)], [y(21), y(23)], [z(21), z(23)], 'Color', 'b', 'LineStyle', '-'); 
+    line([x(21), x(24)], [y(21), y(24)], [z(21), z(24)], 'Color', 'b', 'LineStyle', '-'); 
+
 
     % label
-    labels = {'O_b', 'O_p', 'P_1', 'P_2', 'P_3', 'P_4', 'P_5', 'P_6', 'B_1', 'B_2', 'B_3', 'B_4', 'B_5', 'B_6', 'A_1', 'A_2', 'A_3', 'A_4', 'A_5', 'A_6', 'target'};
+    labels = {'O_b', 'O_p', 'P_1', 'P_2', 'P_3', 'P_4', 'P_5', 'P_6', 'B_1', 'B_2', 'B_3', 'B_4', 'B_5', 'B_6', 'A_1', 'A_2', 'A_3', 'A_4', 'A_5', 'A_6', 'tar', 'x_h', 'y_h', 'z_h'};
 
     for i = 1:numel(x)
         text(x(i), y(i), z(i), labels{i}, 'FontSize', 8, 'FontWeight', 'bold');
     end
 
-    axis([-200, 200, -200, 200, 0, 180])
+    axis([-200, 200, -200, 200, -30, 180]);
     
 end
 

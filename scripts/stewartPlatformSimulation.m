@@ -13,7 +13,7 @@ a = 25;
 betaArray = deg2rad([120 + 180, 120 + 180, 240 + 180, 240 + 180, ...
     360 + 180, 360 + 180]); % 1 * 6, add 180 since motors face inwards
 baseToTop = [0; 0; 90]; % from center of base coordinate to top platform coordinate (at home position)
-topToTarget = [100; -50; 30]; % 3 * 1, from centor of the top platform to center of the target (at home position) in home top platform coordinate
+topToTarget = [100; -50; 20]; % 3 * 1, from centor of the top platform to center of the target (at home position) in home top platform coordinate
 
 
 %% Sample input values (Sine)
@@ -21,7 +21,7 @@ amplitude = 20;
 frequency = 1;          
 timeShift = 0;
 amplitudeShift = 0;
-duration = 10; 
+duration = 3; 
 samplingRate = 20;
 numSamples = round(duration * samplingRate);
 
@@ -36,7 +36,7 @@ sineData = generateSineData(amplitude, frequency, timeShift, ...
 
 % t = [sineData, zeros(numSamples, 1) , zeros(numSamples, 1) ];  % numSample * 3
 % t = [zeros(numSamples, 1), sineData, zeros(numSamples, 1)];  % numSample * 3
-% t = [zeros(numSamples, 1), zeros(numSamples, 1), 0.1 * sineData];  % numSample * 3
+% t = [zeros(numSamples, 1), zeros(numSamples, 1), 0.3 * sineData];  % numSample * 3
 t = [zeros(numSamples, 1), zeros(numSamples, 1), zeros(numSamples, 1)];  % numSample * 3
 
 rotations = [0.01 * sineData, zeros(numSamples, 1), ...
@@ -72,14 +72,17 @@ for i = 1:size(t, 1)
 end
 
 
-%% Compute pArray and servoAngles and save them to a matrix for later visualiation
+%% Compute pArray, housingUnitVectors and servoAngles and save them to a matrix for later visualiation
 pArrayAllTime = zeros(numSamples, 3, 6);
 servoAngleAllTime = zeros(numSamples, 1, 6);
+housingUnitVectorsAllTime = zeros(numSamples, 3, 3);
 for i=1:numSamples
     pArray = convertToNewFrame(transformed_rotations(i, 1), transformed_rotations(i, 2), ...
         transformed_rotations(i, 3), transformed_t(i, :)', pArrayPlatform); % 3 * 6
     pArray(abs(pArray) < ZERO_THRESHOLD) = 0;
     pArrayAllTime(i, :, :) = pArray;
+
+    housingUnitVectorsAllTime(i, :, :) = housingCoordinateToBaseCoordinate(topToTarget, baseToTop, t(i, :)', rotations(i, :)');
 
     try
         servoAngleArray = computeServoAngleArray(pArray, bArray, s, a, ...
@@ -96,26 +99,12 @@ for i=1:numSamples
     end
 end
 
-%% Compute dosimeters locations for visualization
-housingUnitVectorsInHousingCoordinate = [1, 0, 0;
-                                         0, 1, 0;
-                                         0, 0, 1];
-
-rotation90Z = [0, -1, 0;
-    1, 0, 0;
-    0, 0, 1];
-
-housingCoordinateYInTopPlatformCoordinate = [topToTarget(1, 1), topToTarget(2, 1), 0] / norm([topToTarget(1, 1), topToTarget(2, 1), 0]);
-housingCoordinateXInTopPlatformCoordinate = rotation90Z * housingCoordinateYInTopPlatformCoordinate;
-zRotationTargetCoordinateToHousingCoordinate = atan2(rotatedVector(2), rotatedVector(1)); 
-
-
 
 %% Create Visualization
 for i = 1:numSamples    
     % Update plot
     updateStewartPlatformPlot(transformed_t(i, :)', reshape(pArrayAllTime(i, :, :), 3, 6), bArray, ...
-        betaArray, reshape(servoAngleAllTime(i, :, :), 1, 6), a, baseToTop, topToTarget, t(i, :)');
+        betaArray, reshape(servoAngleAllTime(i, :, :), 1, 6), a, baseToTop, topToTarget, t(i, :)', reshape(housingUnitVectorsAllTime(i, :, :), 3, 3));
     
     % Set plot properties
     title('Stewart Platform Animation');
