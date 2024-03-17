@@ -6,15 +6,15 @@
 numSamples = 5;
 
 % test for same angles
-AngleToBeRepeat = rand(numSamples, 1) * 180.0;
+AngleToBeRepeat = randi([0, 180], numSamples, 1);
 servoAngleAllTime = repmat(AngleToBeRepeat, 1, 1, 6);
 disp("all angles: " + servoAngleAllTime);
 
-% test for different angles
-% servoAngleAllTime = rand(numSamples, 1, 6) * 180.0;
+%test for different angles
+ %servoAngleAllTime = rand(numSamples, 1, 6) * 180.0;
 % disp("all angles: " + servoAngleAllTime);
 
-
+ 
 %% 
 % Connect to Arduino
 arduinoObj = serialport("COM7", 9600); % Update COM3 to your Arduino's port
@@ -24,16 +24,17 @@ for i=1:numSamples
     
     disp("time step " + i + " angles: " + servoAngles);
     % Give the Arduino time to reset
-    pause(2);
+    %pause(2);
     
     % Define an array of numbers
     numbers = servoAngles;
-    %numbers = [0,20];
+    configure = [0,0,0,0,0,0];
     % Convert the array to a string format: "12,34"
+    configureString = strjoin(string(configure), ",");
     numbersString = strjoin(string(numbers), ",");
     
     % Send the string to Arduino
-    writeline(arduinoObj, numbersString);
+    writeline(arduinoObj, configureString);
     
     % Wait and read confirmation from Arduino
     confirmation = readline(arduinoObj);

@@ -28,43 +28,33 @@ void setup() {
 //VOID LOOP ----------------------------------------------------------------------------------------------------------------------------------------
 
 void loop() {
-  // Check if data is available to read
   if (Serial.available() > 0) {
     // Read the incoming string
     String receivedData = Serial.readStringUntil('\n');
-    // Split the received string into two parts based on the comma
-    int commaIndex = receivedData.indexOf(',');
-    String firstNumberString = receivedData.substring(0, commaIndex);
-    String secondNumberString = receivedData.substring(commaIndex + 1);
-    String thirdNumberString = receivedData.substring(0, commaIndex + 2);
-    String fourthNumberString = receivedData.substring(commaIndex + 3);
-    String fifthNumberString = receivedData.substring(0, commaIndex + 4);
-    String sixthNumberString = receivedData.substring(commaIndex + 5);
-    // Convert the split strings to integers
-    firstNumber = firstNumberString.toInt();
-    secondNumber = secondNumberString.toInt();
-    thirdNumber = thirdNumberString.toInt();
-    fourthNumber = fourthNumberString.toInt();
-    fifthNumber = fifthNumberString.toInt();
-    sixthNumber = sixthNumberString.toInt();
-    int angleArray[6] = {firstNumber, secondNumber, thirdNumber, fourthNumber, fifthNumber, sixthNumber};
-    //int array[6] = {0, 0, 0, 0, 0, 0};
-    // Validate angles
-    if (firstNumber >= 0 && firstNumber <= 180 && secondNumber >= 0 && secondNumber <= 180 && thirdNumber >= 0 && thirdNumber <= 180 && fourthNumber >= 0 && fourthNumber <= 180 && fifthNumber >= 0 && fifthNumber <= 180 && sixthNumber >= 0 && sixthNumber <= 180) {
-      // If valid, move servos in a loop from firstNumber to secondNumber
-      while(true) {
-        //moveServoInRange(2, firstNumber, secondNumber);
-        //moveindivServosSep(0, firstNumber, secondNumber);
-        //initializeEvenMotors(firstNumber, secondNumber);
-        //moveAllServosnew(firstNumber, secondNumber);
-        updateMotorAngles(angleArray);
-       //moveServosloop(angleArray);
-       //moveServos(angleArray);
-        // Optional: Add a delay or a condition to break the loop if necessary
+    // Use strtok to split the string into tokens
+    char charArray[receivedData.length() + 1];
+    receivedData.toCharArray(charArray, sizeof(charArray));
+    char* ptr = strtok(charArray, ",");
+    int angleArray[6];
+    int index = 0;
+    while (ptr != NULL) {
+      if (index < 6) { // Make sure not to exceed the array bounds
+        int angle = atoi(ptr);
+        if (angle >= 0 && angle <= 180) {
+          angleArray[index] = angle;
+        } else {
+          Serial.println("Error: Angles must be between 0 and 180 degrees.");
+          return; // Exit if any angle is invalid
+        }
+        index++;
       }
+      ptr = strtok(NULL, ",");
+    }
+
+    if (index == 6) { // Check if exactly 6 angles were provided
+      updateMotorAngles(angleArray);
     } else {
-      // If angles are invalid, print an error message
-      Serial.println("Error: Angles must be between 0 and 180 degrees.");
+      Serial.println("Error: Incorrect number of angles provided.");
     }
   }
 }
@@ -210,4 +200,11 @@ void updateMotorAngles(int angles[6]) {
       lastAngles[i] = angles[i];
     }
   }
+}  // put your setup code here, to run once:
+
+// Converts angle to pulse length
+uint16_t angleToPulse(int angle) {
+  return map(angle, 0, 180, SERVOMIN, SERVOMAX);
 }
+
+
