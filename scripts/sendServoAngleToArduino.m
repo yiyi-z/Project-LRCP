@@ -88,8 +88,13 @@ for i=1:numSamples
     end
 end
 
+disp(servoAngleAllTime)
 
+% add last time step as all zero (not compatible with the model, but just
+% for testing)
 
+servoAngleAllTime = cat(1, servoAngleAllTime, zeros(1, 1, 6));
+disp(size(servoAngleAllTime))
 disp(servoAngleAllTime)
  
 %% passing one time step by one time step
