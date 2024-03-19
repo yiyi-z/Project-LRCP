@@ -65,6 +65,26 @@ for i=1:numSamples
             betaArray);
         servoAngleArray(abs(servoAngleArray) < ZERO_THRESHOLD) = 0;
 
+        servoAngleAllTime(i, :) = servoAngleArray;
+    catch exception
+        % Display the error message
+        fprintf('Error in computeServoAngleArray at iteration %d:\n%s\n', ...
+            i, exception.message);
+        % End the program
+        error('Terminating the program due to an error.');
+    end
+end
+
+for i=1:numSamples
+    pArray = convertToNewFrame(transformed_rotations(i, 1), transformed_rotations(i, 2), ...
+        transformed_rotations(i, 3), transformed_t(i, :)', pArrayPlatform); % 3 * 6
+    pArray(abs(pArray) < ZERO_THRESHOLD) = 0;
+
+    try
+        servoAngleArray = computeServoAngleArray(pArray, bArray, s, a, ...
+            betaArray);
+        servoAngleArray(abs(servoAngleArray) < ZERO_THRESHOLD) = 0;
+
         % Convert servoAngleArray from radians to degrees
         servoAngleArray = rad2deg(servoAngleArray);
 
