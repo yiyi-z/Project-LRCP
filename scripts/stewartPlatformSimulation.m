@@ -21,7 +21,7 @@ amplitude = 20;
 frequency = 1;          
 timeShift = 0;
 amplitudeShift = 0;
-duration = 3; 
+duration = 10; 
 samplingRate = 20;
 numSamples = round(duration * samplingRate);
 
@@ -39,7 +39,7 @@ sineData = generateSineData(amplitude, frequency, timeShift, ...
 % t = [zeros(numSamples, 1), zeros(numSamples, 1), 0.3 * sineData];  % numSample * 3
 t = [zeros(numSamples, 1), zeros(numSamples, 1), zeros(numSamples, 1)];  % numSample * 3
 
-rotations = [0.01 * sineData, zeros(numSamples, 1), ...
+rotations = [0.015 * sineData, zeros(numSamples, 1), ...
     zeros(numSamples, 1)];
 % rotations = [zeros(numSamples, 1), 0.005 * sineData, ...
 %     zeros(numSamples, 1)];

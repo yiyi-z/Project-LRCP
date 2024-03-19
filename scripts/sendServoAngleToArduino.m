@@ -65,9 +65,6 @@ for i=1:numSamples
             betaArray);
         servoAngleArray(abs(servoAngleArray) < ZERO_THRESHOLD) = 0;
 
-        % Convert servoAngleArray from radians to degrees
-        servoAngleArray = rad2deg(servoAngleArray);
-
         servoAngleAllTime(i, :) = servoAngleArray;
     catch exception
         % Display the error message
@@ -77,8 +74,10 @@ for i=1:numSamples
         error('Terminating the program due to an error.');
     end
 end
-disp(servoAngleAllTime)
 
+% disp(servoAngleAllTime)
+
+servoAngleAllTime = convertAngleToMotorRange(servoAngleAllTime);
 % add last time step as all zero (not compatible with the model, but just
 % for testing)
 
