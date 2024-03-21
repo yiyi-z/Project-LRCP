@@ -23,7 +23,31 @@ void setup() {
   pwm.begin();
   // Set frequency of the PWM signals (default is 50Hz)
   pwm.setPWMFreq(60);  // Analog servos run at ~60 Hz updates
+
+  // Set all servos to 0 degrees
+  for (int i = 0; i < 6; i++) {
+    pwm.setPWM(i, 0, angleToPulse(0));
+  }
 }
+
+
+
+void updateMotorAngles(int angles[6]) {
+  for(int i = 0; i < 6; i++) {
+    if(angles[i] != lastAngles[i]) {
+      uint16_t pulseLength = angleToPulse(angles[i]);
+      pwm.setPWM(i, 0, pulseLength);
+        
+      lastAngles[i] = angles[i];
+    }
+  }
+}  // put your setup code here, to run once:
+
+// Converts angle to pulse length
+uint16_t angleToPulse(int angle) {
+  return map(angle, 0, 180, SERVOMIN, SERVOMAX);
+}
+
 
 //VOID LOOP ----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -192,19 +216,6 @@ void moveAllServosnew(uint16_t minAngle, uint16_t maxAngle) {
   delay(1000); // Wait for 1 second to allow servos to reach the final position
 }
 
-void updateMotorAngles(int angles[6]) {
-  for(int i = 0; i < 6; i++) {
-    if(angles[i] != lastAngles[i]) {
-      uint16_t pulseLength = angleToPulse(angles[i]);
-      pwm.setPWM(i, 0, pulseLength);
-      lastAngles[i] = angles[i];
-    }
-  }
-}  // put your setup code here, to run once:
 
-// Converts angle to pulse length
-uint16_t angleToPulse(int angle) {
-  return map(angle, 0, 180, SERVOMIN, SERVOMAX);
-}
 
 

@@ -32,7 +32,7 @@ function servoAngleAllTimeString = servoAngleMatrixToString(servoAngleAllTime)
     % Loop through each set of angles in the matrix
     for i = 1:size(servoAngleAllTime, 1)
         % Convert current row of angles to a comma-separated string, trim trailing comma
-        angleSetString = strjoin(arrayfun(@(x) num2str(x, '%.2f'), servoAngleAllTime(i, :), 'UniformOutput', false), ',');
+        angleSetString = strjoin(arrayfun(@(x) num2str(x, '%d'), servoAngleAllTime(i, :), 'UniformOutput', false), ',');
         
         % Append this set to the main string with a semicolon (if not the first set)
         if i > 1

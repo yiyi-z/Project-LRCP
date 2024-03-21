@@ -86,38 +86,56 @@ disp(size(servoAngleAllTime))
 disp(servoAngleAllTime)
  
 %% passing one time step by one time step
-% % Connect to Arduino
-% arduinoObj = serialport("COM7", 9600); % Update COM3 to your Arduino's port
-% 
-% for i=1:numSamples
-%     servoAngles = reshape(servoAngleAllTime(i, :, :), 1, 6);
-% 
-%     disp("time step " + i + " angles: " + servoAngles);
-%     % Give the Arduino time to reset
-%     %pause(2);
-% 
-%     % Define an array of numbers
-%     numbers = servoAngles;
-%     configure = [0,0,0,0,0,0];
-%     % Convert the array to a string format: "12,34"
-%     configureString = strjoin(string(configure), ",");
-%     numbersString = strjoin(string(numbers), ",");
-% 
-%     % Send the string to Arduino
-%     writeline(arduinoObj, configureString);
-% 
-%     % Wait and read confirmation from Arduino
-%     confirmation = readline(arduinoObj);
-% 
-%     % Display the confirmation
-%     disp(['Confirmation from Arduino: ', confirmation]);
-% 
-% end
-% % Clean up
-% clear arduinoObj
+% Generate 5 arrays with 6 random integers between 0 and 180
+numArrays = 5; % Number of arrays
+numAngles = 6; % Number of angles in each array
+
+% Preallocate a matrix for efficiency
+randomAngles = zeros(numArrays, numAngles);
+
+for i = 1:numArrays-1 % Adjust the loop to fill only up to the second-to-last array
+    randomAngles(i, :) = randi([0, 180], 1, numAngles);
+end
+
+% Ensure the last array contains only zeros
+% This step might be redundant given the preallocation step, but it's here for clarity.
+randomAngles(end, :) = zeros(1, numAngles);
+
+% Display the generated arrays
+disp(randomAngles);
+ %Connect to Arduino
+arduinoObj = serialport("COM7", 9600); % Update COM3 to your Arduino's port
+
+for i=1:numSamples
+    servoAngles = reshape(randomAngles(i, :, :), 1, 6);
+
+    disp("time step " + i + " angles: " + servoAngles);
+    % Give the Arduino time to reset
+    %pause(2);
+
+    % Define an array of numbers
+    numbers = servoAngles;
+    %configure = [30,50,70,90,140,180];
+    % Convert the array to a string format: "12,34"
+    %configureString = strjoin(string(configure), ",");
+    numbersString = strjoin(string(numbers), ",");
+
+    % Send the string to Arduino
+    writeline(arduinoObj, numbersString);
+
+    % Wait and read confirmation from Arduino
+    confirmation = readline(arduinoObj);
+
+    % Display the confirmation
+    disp(['Confirmation from Arduino: ', confirmation]);
+
+end
+% Clean up
+clear arduinoObj
 
 %% passing whole servoAngleAllTime at once
-sendMultipleServoAnglesToArduino(servoAngleAllTime);
+%servoAnglesTest = [30,40,50,60,70,80];
+%sendMultipleServoAnglesToArduino(servoAnglesTest);
 
 
 
