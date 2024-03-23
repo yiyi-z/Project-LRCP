@@ -2,7 +2,7 @@
 #include <Adafruit_PWMServoDriver.h>
 
 #define SERVOMIN  150 // This is the 'minimum' pulse length count (out of 4096)
-#define SERVOMAX  600 // This is the 'maximum' pulse length count (out of 4096)
+#define SERVOMAX  500  // This is the 'maximum' pulse length count (out of 4096)
 #define NUM_SERVOS 6
 
 // Create the servo driver object
@@ -52,16 +52,16 @@ void loop() {
     // Validate angles
     if (firstNumber >= 0 && firstNumber <= 180 && secondNumber >= 0 && secondNumber <= 180 && thirdNumber >= 0 && thirdNumber <= 180 && fourthNumber >= 0 && fourthNumber <= 180 && fifthNumber >= 0 && fifthNumber <= 180 && sixthNumber >= 0 && sixthNumber <= 180) {
       // If valid, move servos in a loop from firstNumber to secondNumber
-      while(true) {
+      //while(true) {
         //moveServoInRange(2, firstNumber, secondNumber);
         //moveindivServosSep(0, firstNumber, secondNumber);
         //initializeEvenMotors(firstNumber, secondNumber);
-        //moveAllServosnew(firstNumber, secondNumber);
-        updateMotorAngles(angleArray);
+      moveAllServosnew(0, 180);
+        //updateMotorAngles(angleArray);
        //moveServosloop(angleArray);
        //moveServos(angleArray);
         // Optional: Add a delay or a condition to break the loop if necessary
-      }
+      //}
     } else {
       // If angles are invalid, print an error message
       Serial.println("Error: Angles must be between 0 and 180 degrees.");
@@ -188,7 +188,7 @@ void moveAllServosnew(uint16_t minAngle, uint16_t maxAngle) {
       pwm.setPWM(i, 0, minPulse);
     }
   }
-  delay(1000); // Wait for 1 second to allow servos to reach the start position
+  delay(3000); // Wait for 1 second to allow servos to reach the start position
 
   for (uint8_t i = 0; i < NUM_SERVOS; i++) {
     if (i % 2 == 0) { // Even-numbered servos
@@ -199,9 +199,14 @@ void moveAllServosnew(uint16_t minAngle, uint16_t maxAngle) {
       pwm.setPWM(i, 0, maxPulse);
     }
   }
-  delay(1000); // Wait for 1 second to allow servos to reach the final position
+  delay(3000); // Wait for 1 second to allow servos to reach the final position
 }
 
+
+// Converts angle to pulse length
+uint16_t angleToPulse(int angle) {
+  return map(angle, 0, 180, SERVOMIN, SERVOMAX);
+}
 void updateMotorAngles(int angles[6]) {
   for(int i = 0; i < 6; i++) {
     if(angles[i] != lastAngles[i]) {

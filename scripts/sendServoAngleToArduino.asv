@@ -84,17 +84,27 @@ servoAngleAllTime = convertAngleToMotorRange(servoAngleAllTime);
 servoAngleAllTime = cat(1, servoAngleAllTime, zeros(1, 1, 6));
 disp(size(servoAngleAllTime))
 disp(servoAngleAllTime)
+%%
+test = [0,0,0,0,0,0;180,180,180,180,180,180;270,270,270,270,270,270];
+display(test);
  
 %% passing one time step by one time step
 % Generate 5 arrays with 6 random integers between 0 and 180
-numArrays = 5; % Number of arrays
+numArrays = 3; % Number of arrays
 numAngles = 6; % Number of angles in each array
 
 % Preallocate a matrix for efficiency
 randomAngles = zeros(numArrays, numAngles);
 
+% for i = 1:numArrays-1 % Adjust the loop to fill only up to the second-to-last array
+%     randomAngles(i, :) = randi([0, 180], 1, numAngles);
+% end
 for i = 1:numArrays-1 % Adjust the loop to fill only up to the second-to-last array
-    randomAngles(i, :) = randi([180, 180], 1, numAngles);
+    % Generate a single random integer between 0 and 180
+    randomNum = randi([0, 180], 1, 1);
+    
+    % Fill the entire array with this number
+    randomAngles(i, :) = repmat(randomNum, 1, 6);
 end
 
 % Ensure the last array contains only zeros
@@ -106,15 +116,16 @@ disp(randomAngles);
  %Connect to Arduino
 arduinoObj = serialport("COM7", 9600); % Update COM3 to your Arduino's port
 
-for i=1:numSamples
+for i=1:numArrays
     servoAngles = reshape(randomAngles(i, :, :), 1, 6);
 
     disp("time step " + i + " angles: " + servoAngles);
+    disp()
     % Give the Arduino time to reset
     %pause(2);
-
     % Define an array of numbers
-    numbers = servoAngles;
+    %numbers = servoAngles;
+    numbers = test;
     %configure = [30,50,70,90,140,180];
     % Convert the array to a string format: "12,34"
     %configureString = strjoin(string(configure), ",");

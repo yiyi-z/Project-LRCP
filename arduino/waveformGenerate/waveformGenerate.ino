@@ -2,7 +2,7 @@
 #include <Adafruit_PWMServoDriver.h>
 
 #define SERVOMIN  150 // This is the 'minimum' pulse length count (out of 4096)
-#define SERVOMAX  600 // This is the 'maximum' pulse length count (out of 4096)
+#define SERVOMAX  500 // This is the 'maximum' pulse length count (out of 4096)
 #define NUM_SERVOS 6
 
 // Create the servo driver object
@@ -41,6 +41,7 @@ void updateMotorAngles(int angles[6]) {
       lastAngles[i] = angles[i];
     }
   }
+  delay(3000);
 }  // put your setup code here, to run once:
 
 // Converts angle to pulse length
@@ -64,7 +65,7 @@ void loop() {
     while (ptr != NULL) {
       if (index < 6) { // Make sure not to exceed the array bounds
         int angle = atoi(ptr);
-        if (angle >= 0 && angle <= 180) {
+        if (angle >= 0 && angle <=  180) {
           angleArray[index] = angle;
         } else {
           Serial.println("Error: Angles must be between 0 and 180 degrees.");
@@ -72,6 +73,10 @@ void loop() {
         }
         index++;
       }
+      for(int i = 0; i < 5; i++)
+        {
+          Serial.println(angleArray[i]);
+        }
       ptr = strtok(NULL, ",");
     }
 
