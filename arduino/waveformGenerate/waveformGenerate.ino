@@ -37,11 +37,10 @@ void updateMotorAngles(int angles[6]) {
     if(angles[i] != lastAngles[i]) {
       uint16_t pulseLength = angleToPulse(angles[i]);
       pwm.setPWM(i, 0, pulseLength);
-        
       lastAngles[i] = angles[i];
     }
   }
-  delay(3000);
+  delay(100);
 }  // put your setup code here, to run once:
 
 // Converts angle to pulse length

@@ -53,7 +53,6 @@ for i = 1:size(t, 1)
     transformed_t(i, :) = transformed_ti';
     transformed_rotations(i, :) = transformed_rotationi';
 end
-
 servoAngleAllTime = zeros(numSamples, 1, 6);
 for i=1:numSamples
     pArray = convertToNewFrame(transformed_rotations(i, 1), transformed_rotations(i, 2), ...
@@ -90,22 +89,22 @@ display(test);
  
 %% passing one time step by one time step
 % Generate 5 arrays with 6 random integers between 0 and 180
-numArrays = 6; % Number of arrays
+numArrays = 80; % Number of arrays
 numAngles = 6; % Number of angles in each array
 
 % Preallocate a matrix for efficiency
 randomAngles = zeros(numArrays, numAngles);
 
-% for i = 1:numArrays-1 % Adjust the loop to fill only up to the second-to-last array
-%     randomAngles(i, :) = randi([0, 180], 1, numAngles);
-% end
 for i = 1:numArrays-1 % Adjust the loop to fill only up to the second-to-last array
-    % Generate a single random integer between 0 and 180
-    randomNum = randi([0, 180], 1, 1);
-    
-    % Fill the entire array with this number
-    randomAngles(i, :) = repmat(randomNum, 1, 6);
+    randomAngles(i, :) = randi([0, 60], 1, numAngles);
 end
+% for i = 1:numArrays-1 % Adjust the loop to fill only up to the second-to-last array
+%     % Generate a single random integer between 0 and 180
+%     randomNum = randi([0, 60], 1, 1);
+%     
+%     % Fill the entire array with this number
+%     randomAngles(i, :) = repmat(randomNum, 1, 6);
+% end
 
 % Ensure the last array contains only zeros
 % This step might be redundant given the preallocation step, but it's here for clarity.
@@ -118,11 +117,10 @@ arduinoObj = serialport("COM7", 9600); % Update COM3 to your Arduino's port
 
 for i=1:numArrays
     servoAngles = reshape(randomAngles(i, :, :), 1, 6);
-
-    disp("time step " + i + " angles: " + servoAngles);
-    %disp(servoAngles);
+    %disp("time step " + i + " angles: " + servoAngles);
+    disp(servoAngles);
     % Give the Arduino time to reset
-    %pause(2);
+    pause(0.5);
     % Define an array of numbers
     numbers = servoAngles;
     %numbers = test;
@@ -130,7 +128,7 @@ for i=1:numArrays
     % Convert the array to a string format: "12,34"
     %configureString = strjoin(string(configure), ",");
     numbersString = strjoin(string(numbers), ",");
-
+    display(numbersString);
     % Send the string to Arduino
     writeline(arduinoObj, numbersString);
 

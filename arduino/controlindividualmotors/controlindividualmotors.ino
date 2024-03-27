@@ -56,7 +56,7 @@ void loop() {
         //moveServoInRange(2, firstNumber, secondNumber);
         //moveindivServosSep(0, firstNumber, secondNumber);
         //initializeEvenMotors(firstNumber, secondNumber);
-      moveAllServosnew(0, 180);
+      moveAllServosnew(0, 30);
         //updateMotorAngles(angleArray);
        //moveServosloop(angleArray);
        //moveServos(angleArray);
