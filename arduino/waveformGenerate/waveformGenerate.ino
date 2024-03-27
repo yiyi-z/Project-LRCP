@@ -6,6 +6,7 @@
 #define NUM_SERVOS 6
 
 // Create the servo driver object
+//hi
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 static int firstNumber = 0; // Declare with default value
 static int secondNumber = 0; // Declare with default value
@@ -219,7 +220,3 @@ void moveAllServosnew(uint16_t minAngle, uint16_t maxAngle) {
   }
   delay(1000); // Wait for 1 second to allow servos to reach the final position
 }
-
-
-
-
