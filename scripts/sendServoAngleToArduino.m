@@ -96,7 +96,7 @@ numAngles = 6; % Number of angles in each array
 randomAngles = zeros(numArrays, numAngles);
 
 for i = 1:numArrays-1 % Adjust the loop to fill only up to the second-to-last array
-    randomAngles(i, :) = randi([0, 60], 1, numAngles);
+    randomAngles(i, :) = randi([0, 50], 1, numAngles);
 end
 % for i = 1:numArrays-1 % Adjust the loop to fill only up to the second-to-last array
 %     % Generate a single random integer between 0 and 180
