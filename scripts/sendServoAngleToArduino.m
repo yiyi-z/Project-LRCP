@@ -89,14 +89,14 @@ display(test);
  
 %% passing one time step by one time step
 % Generate 5 arrays with 6 random integers between 0 and 180
-numArrays = 80; % Number of arrays
+numArrays = 20; % Number of arrays
 numAngles = 6; % Number of angles in each array
 
 % Preallocate a matrix for efficiency
 randomAngles = zeros(numArrays, numAngles);
 
 for i = 1:numArrays-1 % Adjust the loop to fill only up to the second-to-last array
-    randomAngles(i, :) = randi([0, 60], 1, numAngles);
+    randomAngles(i, :) = randi([50, 100], 1, numAngles);
 end
 % for i = 1:numArrays-1 % Adjust the loop to fill only up to the second-to-last array
 %     % Generate a single random integer between 0 and 180
@@ -108,7 +108,7 @@ end
 
 % Ensure the last array contains only zeros
 % This step might be redundant given the preallocation step, but it's here for clarity.
-randomAngles(end, :) = zeros(1, numAngles);
+randomAngles(end, :) = ones(1, numAngles)*80;
 
 % Display the generated arrays
 disp(randomAngles);
