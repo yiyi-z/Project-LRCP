@@ -4,25 +4,27 @@ addpath("../functions")
 
 %% Stewart Platform configuration (of our model)
 % refer to function computeServoAngleArray for more details
-bArray = [90.53, 49.00, -46.66, -89.04, -41.28, 42.62; ...
-         0, 74.28, 74.28, 0, -81.72, -81.72; ...
+bArray = [99, 64, -46, -88, -46, 35; ...
+         0, 71, 81, 14, -81, -88; ...
          0, 0, 0, 0, 0, 0]; % 3 * 6
-pArrayPlatform = 0.6 * bArray; % 3 * 6
+pArrayPlatform = [45, 11, -11, -41, -27, 34; ...
+         -11, 43, 43, -11, -29, -29; ...
+         0, 0, 0, 0, 0, 0]; % 3 * 6
 s = 100;
 a = 25;
 betaArray = deg2rad([120 + 180, 120 + 180, 240 + 180, 240 + 180, ...
     360 + 180, 360 + 180]); % 1 * 6, add 180 since motors face inwards
-baseToTop = [0; 0; 90]; % from center of base coordinate to top platform coordinate (at home position)
-topToTarget = [100; -50; 20]; % 3 * 1, from centor of the top platform to center of the target (at home position) in home top platform coordinate
+baseToTop = [0; 0; 85]; % from center of base coordinate to top platform coordinate (at home position)
+topToTarget = [152; -95; 51]; % 3 * 1, from centor of the top platform to center of the target (at home position) in home top platform coordinate
 
 
 %% Sample input values (Sine)
-amplitude = 20;
+amplitude = 10;
 frequency = 1;          
 timeShift = 0;
 amplitudeShift = 0;
-duration = 10; 
-samplingRate = 20;
+duration = 3; 
+samplingRate = 10;
 numSamples = round(duration * samplingRate);
 
 % we will use this threshold to filter value that's zero but not store as
@@ -34,19 +36,19 @@ ZERO_THRESHOLD = 1e-6;
 sineData = generateSineData(amplitude, frequency, timeShift, ...
     amplitudeShift, duration, samplingRate);
 
-% t = [sineData, zeros(numSamples, 1) , zeros(numSamples, 1) ];  % numSample * 3
+t = [sineData, zeros(numSamples, 1) , zeros(numSamples, 1) ];  % numSample * 3
 % t = [zeros(numSamples, 1), sineData, zeros(numSamples, 1)];  % numSample * 3
 % t = [zeros(numSamples, 1), zeros(numSamples, 1), 0.3 * sineData];  % numSample * 3
-t = [zeros(numSamples, 1), zeros(numSamples, 1), zeros(numSamples, 1)];  % numSample * 3
+% t = [zeros(numSamples, 1), zeros(numSamples, 1), zeros(numSamples, 1)];  % numSample * 3
 
-rotations = [0.015 * sineData, zeros(numSamples, 1), ...
-    zeros(numSamples, 1)];
+% rotations = [0.015 * sineData, zeros(numSamples, 1), ...
+%     zeros(numSamples, 1)];
 % rotations = [zeros(numSamples, 1), 0.005 * sineData, ...
 %     zeros(numSamples, 1)];
 % rotations = [zeros(numSamples, 1), zeros(numSamples, 1), ...
 %    0.01 * sineData];
-% rotations = [zeros(numSamples, 1), zeros(numSamples, 1), ...
-%      zeros(numSamples, 1)];  % numSample * 3
+rotations = [zeros(numSamples, 1), zeros(numSamples, 1), ...
+     zeros(numSamples, 1)];  % numSample * 3
 
 
 t(abs(t) < ZERO_THRESHOLD) = 0;

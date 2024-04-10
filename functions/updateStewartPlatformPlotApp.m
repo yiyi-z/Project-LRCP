@@ -124,7 +124,7 @@ function updateStewartPlatformPlotApp(uiAxis, transformed_t, pArray, bArray, bet
     % axis([-100, 100, -100, 100, 0, 120])
     xlim(uiAxis, [-200, 200]);
     ylim(uiAxis, [-200, 200]);
-    zlim(uiAxis, [-30, 180]);
+    zlim(uiAxis, [-30, 200]);
     
 end
 
