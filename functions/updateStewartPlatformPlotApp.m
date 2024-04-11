@@ -6,6 +6,7 @@ function updateStewartPlatformPlotApp(uiAxis, transformed_t, pArray, bArray, bet
     % a1, ..., a6: the joint between rotation arm and the rod,
     % b1, ..., b6: the center of the rotation for the motor (B_arr).
     
+
     originBase = [0, 0, 0];
     originPlatform = transformed_t;
 
@@ -55,8 +56,10 @@ function updateStewartPlatformPlotApp(uiAxis, transformed_t, pArray, bArray, bet
 
     target = baseToTop + topToTarget + t;
 
+    % points = {originBase, originPlatform, p1, p2, p3, p4, p5, p6, ...
+    %     b1, b2, b3, b4, b5, b6, a1, a2, a3, a4, a5, a6, target, c1, c2, c3};
     points = {originBase, originPlatform, p1, p2, p3, p4, p5, p6, ...
-        b1, b2, b3, b4, b5, b6, a1, a2, a3, a4, a5, a6, target, c1, c2, c3};
+        b1, b2, b3, b4, b5, b6, a1, a2, a3, a4, a5, a6, c1, c2, c3};
     x = zeros(1, numel(points));
     y = zeros(1, numel(points));
     z = zeros(1, numel(points));
@@ -66,9 +69,8 @@ function updateStewartPlatformPlotApp(uiAxis, transformed_t, pArray, bArray, bet
         y(i) = points{i}(2);
         z(i) = points{i}(3);
     end
-    scatter3(uiAxis, x, y, z, 'o', 'MarkerFaceColor', 'r');
-    
-
+    % scatter3(uiAxis, x, y, z, 'o', 'MarkerFaceColor', 'r');
+    scatter3(uiAxis, target(1), target(2), target(3), 'o', 'MarkerFaceColor', 'g');
     % connect points for better visualization
     % We will connect:
     % pi together as a hexogon
@@ -109,14 +111,14 @@ function updateStewartPlatformPlotApp(uiAxis, transformed_t, pArray, bArray, bet
 
     line(uiAxis,[x(1), x(2)], [y(1), y(2)], [z(1), z(2)], 'Color', 'b', 'LineStyle', '-'); 
 
-    line(uiAxis,[x(2), x(21)], [y(2), y(21)], [z(2), z(21)], 'Color', 'b', 'LineStyle', '-'); 
+    line(uiAxis,[x(2), target(1)], [y(2), target(2)], [z(2), target(3)], 'Color', 'b', 'LineStyle', '-'); 
 
-    line(uiAxis,[x(21), x(22)], [y(21), y(22)], [z(21), z(22)], 'Color', 'b', 'LineStyle', '-'); 
-    line(uiAxis,[x(21), x(23)], [y(21), y(23)], [z(21), z(23)], 'Color', 'b', 'LineStyle', '-'); 
-    line(uiAxis,[x(21), x(24)], [y(21), y(24)], [z(21), z(24)], 'Color', 'b', 'LineStyle', '-'); 
+    line(uiAxis,[target(1), x(21)], [target(2), y(21)], [target(3), z(21)], 'Color', 'b', 'LineStyle', '-'); 
+    line(uiAxis,[target(1), x(22)], [target(2), y(22)], [target(3), z(22)], 'Color', 'b', 'LineStyle', '-'); 
+    line(uiAxis,[target(1), x(23)], [target(2), y(23)], [target(3), z(23)], 'Color', 'b', 'LineStyle', '-'); 
 
     % label
-    labels = {'O_b', 'O_p', 'P_1', 'P_2', 'P_3', 'P_4', 'P_5', 'P_6', 'B_1', 'B_2', 'B_3', 'B_4', 'B_5', 'B_6', 'A_1', 'A_2', 'A_3', 'A_4', 'A_5', 'A_6',  'tar', 'x_h', 'y_h', 'z_h'};
+    labels = {'O_b', 'O_p', 'P_1', 'P_2', 'P_3', 'P_4', 'P_5', 'P_6', 'B_1', 'B_2', 'B_3', 'B_4', 'B_5', 'B_6', 'A_1', 'A_2', 'A_3', 'A_4', 'A_5', 'A_6', 'x_h', 'y_h', 'z_h'};
     for i = 1:numel(x)
         text(uiAxis, x(i), y(i), z(i), labels{i}, 'FontSize', 8, 'FontWeight', 'bold');
     end
